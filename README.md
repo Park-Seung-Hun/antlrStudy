@@ -1,7 +1,7 @@
 # antlrStudy
 - 실습 환경 : Shell
 
-### Ch.1 Install ANTLR
+## Ch.1 Install ANTLR
 
 [설치 URL](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md)
 
@@ -23,7 +23,7 @@
 
 
 
-### Ch.2 Big Picture
+## Ch.2 Big Picture
 
 - 인터프리터 : 응용 프로그램이 문장을 계산하거나 실행하는 경우 (계산기, 구성파일 리더, 파이썬 인터프리터)
 - 트랜스레이터 : 문장을 한 언어로부터 다른 언어로 변환하는 경우 (Java to C# 변환기와 컴파일러)
@@ -69,10 +69,10 @@ void stat(){
   - parse tree Listener : ???
   - parse tree Visitor : ???
   
-### Ch.3 ANTLR 프로젝트 스타터
+## Ch.3 ANTLR 프로젝트 스타터
   - 실습(/starter)
 
-### Ch.4 퀵 투어
+## Ch.4 퀵 투어
   - ANTLR의 기능을 표현하는 여러가지 예제들을 4단계를 통해 학습
    
 1. Simple 산술연산 랭귀지의 그래머 작업
@@ -84,7 +84,7 @@ void stat(){
 3. 자바 클래스 정의를 읽고 그 클래스의 메소드로부터 도출된 자바 인터페이스를 분할하는 Translator를 빌드
 4. Action(임의 코드)를 그래머에 직접적으로 삽입하는 방법. (보통의 경우 랭귀지 응용 프로그램 -> visitor or listener로 빌드) (flexible한 특성을 위해 응용 프로그램에 특화된 코드를 생성된 파서에 삽입하는 것을 허용)
 
-#### 산술식 언어 매칭
+### 산술식 언어 매칭
   - 간단한 계산기 빌드. 기본적신 산술연산자 + 괄호 + 정수 및 변수만 허용 (부동소수점 x)
 
 1. 샘플 입력 t.expr
@@ -132,7 +132,7 @@ WS  :   [ \t]+ -> skip ; // toss out whitespace
 3. ExprJoyRide.java 파일 생성 (TestRig으로도 그래머를 개발하고 테스트하지만, ANTLR이 생성한 파서를 응용 프로그램에 통합하기 위한 코드) 
 
 
-#### grammar import
+##### grammar import
 - 매우 큰 grammar는 논리적 chunks로 분할하는 것이 유리. (grammar = parser + lexer grammar로 분리하는 것)
 
 1. CommonLexerRules.g4 : 모든 어휘적 룰을 가진 렉서 그래머
@@ -167,6 +167,50 @@ expr:   expr ('*'|'/') expr
     ;
 ```
 
-#### 에러 입력 처리
+##### 에러 입력 처리
 - ANTRL 파서는 구문 에러를 자동으로 리포트하고 복구한다.
 - 자세한 사항은 9장
+
+### visitor로 계산기 구현하기
+- grammar를 정제된 상태로 유지하고 랭귀지 응용 프로그램을 구현하기 위해 parse tree visitor와 기타 탐색기를 사용.
+- 작은 계산기를 구현하기 위해 visitor pattern을 사용
+- visitor를 생성하기 전 rule alternative를 레이블 해야한다.
+  - 레이블이란? rule 이름과 충돌하지 않는 어떤 식별자라도 무관함
+
+LabeledExpr.g4
+```g4
+grammar LabeledExpr; // rename to distinguish from Expr.g4
+
+prog:   stat+ ;
+
+// rule 이름과 다른 # 레이블
+stat:   expr NEWLINE                # printExpr
+    |   ID '=' expr NEWLINE         # assign
+    |   NEWLINE                     # blank
+    ;
+
+expr:   expr op=('*'|'/') expr      # MulDiv
+    |   expr op=('+'|'-') expr      # AddSub
+    |   INT                         # int
+    |   ID                          # id
+    |   '(' expr ')'                # parens
+    ;
+
+// 연산자 리터럴을 위한 token 이름을 정의하고, 이후에 visitor에서 자바 상수로 token 이름을 참조 할 수 있다.
+MUL :   '*' ; // assigns token name to '*' used above in grammar
+DIV :   '/' ;
+ADD :   '+' ;
+SUB :   '-' ;
+
+//
+ID  :   [a-zA-Z]+ ;      // match identifiers
+INT :   [0-9]+ ;         // match integers
+NEWLINE:'\r'? '\n' ;     // return newlines to parser (is end-statement signal)
+WS  :   [ \t]+ -> skip ; // toss out whitespace
+
+```
+
+### Listener로 번역기 구현하기
+- Listener vs Visitor 
+  - Listener : ANTRL이 제공하는 Walker 오브젝트에 의해 리스너 오브젝트가 호출되는 것.
+  - Visitor : 명확한 visit 콜로 차일드를 탐색해야 한다.
