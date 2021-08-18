@@ -70,4 +70,103 @@ void stat(){
   - parse tree Visitor : ???
   
 ### Ch.3 ANTLR 프로젝트 스타터
+  - 실습(/starter)
 
+### Ch.4 퀵 투어
+  - ANTLR의 기능을 표현하는 여러가지 예제들을 4단계를 통해 학습
+   
+1. Simple 산술연산 랭귀지의 그래머 작업
+  - 표현식 그래머를 위한 중요한 파스 트리(파서가 입력 구문을 매치하는 방식을 기록)
+  - import를 사용하여 관리가능한 Chunk로 그래머를 분리하는 방법
+  - ANTLR이 생성한 구문이 유효하지 않은 입력에 어떻게 반응하는가?
+
+2. 산술연산을 위한 Parser를 살펴본 다음에 표현식 그래머 parse tree를 탐색하는 계산기를 빌드하기 위해 visitor Pattern을 사용.
+3. 자바 클래스 정의를 읽고 그 클래스의 메소드로부터 도출된 자바 인터페이스를 분할하는 Translator를 빌드
+4. Action(임의 코드)를 그래머에 직접적으로 삽입하는 방법. (보통의 경우 랭귀지 응용 프로그램 -> visitor or listener로 빌드) (flexible한 특성을 위해 응용 프로그램에 특화된 코드를 생성된 파서에 삽입하는 것을 허용)
+
+#### 산술식 언어 매칭
+  - 간단한 계산기 빌드. 기본적신 산술연산자 + 괄호 + 정수 및 변수만 허용 (부동소수점 x)
+
+1. 샘플 입력 t.expr
+```txt
+193
+a=5
+b=6
+a+b*2
+(1+2)*3
+```
+
+
+2. grammar 생성 Expr.g4
+```g4
+grammar Expr; // grammar의 파일명과 같아야 한다.
+
+/** The start rule; begin parsing here. */
+/*구문을 설명하는 룰 세트로 구성. stat과 expr 같은 구문구조를 위한 룰 and 식별자나 정수같은 어휘 심볼을 위한 룰 존재. */
+prog:   stat+ ; 
+
+
+/*stat과 expr을 위한 rule -> 소문자로 시작하는 룰(parser룰) */
+/*대체 룰은 '|'연산자로 구분하며, 심볼을 괄호로 묶어 서브롤로 그룹핑 할 수 있다. ex) ('*'|'/')은 곱셈 심볼과 나눗셈 심볼로 매치.*/
+stat:   expr NEWLINE                
+    |   ID '=' expr NEWLINE        
+    |   NEWLINE                   
+    ;
+
+expr:   expr ('*'|'/') expr   
+    |   expr ('+'|'-') expr   
+    |   INT                    
+    |   ID                    
+    |   '(' expr ')'         
+    ;
+
+
+/*식별자나 정수 등 어휘 심볼을 위한 rule -> 대문자로 시작하는 룰(lexer룰,어휘&토큰)*/
+ID  :   [a-zA-Z]+ ;      // match identifiers <label id="code.tour.expr.3"/>
+INT :   [0-9]+ ;         // match integers
+NEWLINE:'\r'? '\n' ;     // return newlines to parser (is end-statement signal)
+WS  :   [ \t]+ -> skip ; // toss out whitespace
+
+```
+
+3. ExprJoyRide.java 파일 생성 (TestRig으로도 그래머를 개발하고 테스트하지만, ANTLR이 생성한 파서를 응용 프로그램에 통합하기 위한 코드) 
+
+
+#### grammar import
+- 매우 큰 grammar는 논리적 chunks로 분할하는 것이 유리. (grammar = parser + lexer grammar로 분리하는 것)
+
+1. CommonLexerRules.g4 : 모든 어휘적 룰을 가진 렉서 그래머
+```g4
+lexer grammar CommonLexerRules; // note "lexer grammar" => 모든 어휘적 룰을 가진 렉서 그래머.
+
+ID  :   [a-zA-Z]+ ;      // match identifiers
+INT :   [0-9]+ ;         // match integers
+NEWLINE:'\r'? '\n' ;     // return newlines to parser (end-statement signal)
+WS  :   [ \t]+ -> skip ; // toss out whitespace
+
+```
+
+2. 원래 grammar로 부터 어휘적 룰을 import로 대체. LibExpr.g4
+
+```g4
+grammar LibExpr;         // Rename to distinguish from original
+import CommonLexerRules; // includes all rules from CommonLexerRules.g4
+/** The start rule; begin parsing here. */
+prog:   stat+ ; 
+
+stat:   expr NEWLINE                
+    |   ID '=' expr NEWLINE        
+    |   NEWLINE                   
+    ;
+
+expr:   expr ('*'|'/') expr   
+    |   expr ('+'|'-') expr  
+    |   INT                    
+    |   ID                    
+    |   '(' expr ')'    
+    ;
+```
+
+#### 에러 입력 처리
+- ANTRL 파서는 구문 에러를 자동으로 리포트하고 복구한다.
+- 자세한 사항은 9장
