@@ -1,5 +1,5 @@
 # antlrStudy
-- 실습 환경 : Shell
+- 실습 환경 : Shell, intellij
 
 ## Ch.1 Install ANTLR
 
@@ -13,7 +13,7 @@
 - ANTLR 실행 (Intelli J)
   1.	*.g4 인 파일을 만든다.
   2.	그래머 작성
-  3.	*.g4 파일로 ANTLR Recognizer를 만든 후(*Parser.java *Lexer.java가 삽입된 실행 가능한 인식기를 생성) rule을 테스트.(컴파일된 인식기를 호출하기 위해 자바 Reflection을 사용한다.)
+  3.	*.g4 파일로 ANTLR Recognizer를 만든 후 (*Parser.java *Lexer.java가 삽입된 실행 가능한 인식기를 생성) rule을 테스트.(컴파일된 인식기를 호출하기 위해 자바 Reflection을 사용한다.)
   
 - ANTLR 실행 (Shell)
   1.	*.g4 인 파일을 만든다.
