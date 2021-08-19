@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/3tour" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/starter" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library>
