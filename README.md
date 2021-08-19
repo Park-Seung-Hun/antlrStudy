@@ -84,7 +84,7 @@ void stat(){
 3. 자바 클래스 정의를 읽고 그 클래스의 메소드로부터 도출된 자바 인터페이스를 분할하는 Translator를 빌드
 4. Action(임의 코드)를 그래머에 직접적으로 삽입하는 방법. (보통의 경우 랭귀지 응용 프로그램 -> visitor or listener로 빌드) (flexible한 특성을 위해 응용 프로그램에 특화된 코드를 생성된 파서에 삽입하는 것을 허용)
 
-### 산술식 언어 매칭
+### 4.1 산술식 언어 매칭
   - 간단한 계산기 빌드. 기본적신 산술연산자 + 괄호 + 정수 및 변수만 허용 (부동소수점 x)
 
 1. 샘플 입력 t.expr
@@ -171,7 +171,7 @@ expr:   expr ('*'|'/') expr
 - ANTRL 파서는 구문 에러를 자동으로 리포트하고 복구한다.
 - 자세한 사항은 9장
 
-### visitor로 계산기 구현하기
+### 4.2 visitor로 계산기 구현하기
 - grammar를 정제된 상태로 유지하고 랭귀지 응용 프로그램을 구현하기 위해 parse tree visitor와 기타 탐색기를 사용.
 - 작은 계산기를 구현하기 위해 visitor pattern을 사용
 - visitor를 생성하기 전 rule alternative를 레이블 해야한다.
@@ -210,7 +210,18 @@ WS  :   [ \t]+ -> skip ; // toss out whitespace
 
 ```
 
-### Listener로 번역기 구현하기
+### 4.3 Listener로 번역기 구현하기
 - Listener vs Visitor 
   - Listener : ANTRL이 제공하는 Walker 오브젝트에 의해 리스너 오브젝트가 호출되는 것.
   - Visitor : 명확한 visit 콜로 차일드를 탐색해야 한다.
+
+
+### 4.4 Parsing 동안에 조작하기
+
+#### 임의 코드를 그래머에 삽입하기
+- 임의 코드를 grammar에 삽입하여 parsing 동안에 값을 계산하고 출력 할 수 있다.
+  - 해당 실습은 3tour/Rows에서 실시.
+- 결과적으로 `java Col 1 < t.rows` 처럼 parser에게 트리를 빌드하지 말라고 요청하면서 Column 번호를 주어 액션을 실행한다.
+
+
+#### 
