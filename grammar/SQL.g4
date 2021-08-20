@@ -57,6 +57,7 @@ result_column
     OR
 */
 
+// Expression rule
 expr
  : literal_value
  | BIND_PARAMETER
