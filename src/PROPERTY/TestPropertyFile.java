@@ -13,7 +13,7 @@ public class TestPropertyFile {
 
         public void exitProp(PropertyFileParser.PropContext ctx) {
             // ctx를 통해 parse tree의 요소에 접근 가능
-            System.out.println(ctx.ID().getText() + ' '+ ctx.STRING().getText());
+            System.out.println(ctx.ID().getText() + ' '+ ctx.ID().getText());
             String id = ctx.ID().getText();
             String value = ctx.STRING().getText();
             props.put(id, value);

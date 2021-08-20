@@ -28,12 +28,6 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelect_stmt(SQLParser.Select_stmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#select}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSelect(SQLParser.SelectContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SQLParser#table}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

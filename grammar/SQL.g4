@@ -8,7 +8,6 @@ parse
     1. * => 0개 or 다수
     2. ? => 0개 or 1개
     3. + => 1개 or 다수
-
     () => 여러 얼터너티브 룰 정의
     | => 다중 얼터너티브로 룰 정의 (or이라 생각하면 편함)
 */
@@ -26,27 +25,24 @@ insert_stmt
     select문 parsing을 위한 parser Rule.
 */
 select_stmt
- :  select ( select )*
- ;
-select
- : K_SELECT result_column ( ',' result_column )*
-   ( K_FROM ( table ( ',' table )*) )?
+ :   K_SELECT result_column ( ',' result_column )*
+       ( K_FROM ( table ( ',' table )*) )? (  K_SELECT result_column ( ',' result_column )*
+                                                ( K_FROM ( table ( ',' table )*) )? )*
  ;
 
 table
- : table_name ( K_AS? table_alias )?
+ : table_name
  ;
 
 result_column
  : '*'
  | table_name '.' '*'
- | expr ( K_AS? column_alias )?
+ | expr
  ;
 
 /*
     SQLite understands the following binary operators, in order from highest to
     lowest precedence:
-
     ||
     *    /    %
     +    -
@@ -100,11 +96,6 @@ unary_operator
   | K_VALUES
   ;
 
-column_alias
- : IDENTIFIER
- | STRING_LITERAL
- ;
-
 table_name
  : any_name
  ;
@@ -113,9 +104,6 @@ column_name
  : any_name
  ;
 
-table_alias
- : any_name
- ;
 
 any_name
  : IDENTIFIER
