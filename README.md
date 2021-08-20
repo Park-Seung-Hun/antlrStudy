@@ -77,8 +77,7 @@ void stat(){
 
   2. parse tree Visitor :
 
-
-      - child를 방문하여 명시적으로 메소드를 호출하기 위해, 탐색 자체를 제어할 필요가 있다
+     - child를 방문하여 명시적으로 메소드를 호출하기 위해, 탐색 자체를 제어할 필요가 있다
 
 - **Listener**
   <img src="https://saumitra.me/images/posts/antlr3.png">
@@ -360,7 +359,7 @@ pair : STRING ':' value;
 2. 공통 토큰(식별자, 키워드, 스트림 및 숫자)은 lexer에 매치
 3. parser가 구분할 필요가 없는 어휘 구조는 단일 토큰으로 묶는다.(ex 부동소수점과 정수를 구분하지 않으면 NUMBER로 정의)
 
-## 5장은 공통 어휘 및 문법 구조이므로 g4 작성시 참고 바람
+### 5장은 공통 어휘 및 문법 구조이므로 g4 작성시 참고 바람
 
 ---
 
@@ -371,3 +370,34 @@ pair : STRING ':' value;
 3. DOT (선언형 언어로 그래프를 서술한다.)
 4. Cymbol 비객체 지향 프로그래밍 언어
 5. R 함수형 프로그래밍 언어
+
+## ch.7 응용 프로그램에 특화된 코드로부터 그래머 분리
+
+- 랭귀지 응용 프로그램을 빌드하기 위해 parse tree 리스너와 비지터를 어떻게 사용하는가?
+  - 리스너는 파스트리 탐색기가 노드를 발견하고 종료하여 트리거한, 룰 enter/exit 이벤트에 응답하는 오브젝트이고, 응용 프로그램의 트리 탐색제어를 지원하기 위해 visitor 패턴을 지원한다.
+  - 리스너와 비지터의 가장 큰 차이점 : 리스너 메서드가 child를 탐색하기 위해 명확하게 메소드를 호출하는데 있어 책임을 지지않고, 비지터는 트리 순회를 유지하기 위해 차일드 노드에 대한 탐색을 명확하게 트리거해야한다.
+
+### 7.1 임베디드 액션(코드)에서 리스너로의 진화
+
+```g4
+grammar PropertyFile;
+@members{
+    void startFile(){}
+    void finishFile(){}
+    void defineProperty(Token name, Token value){}
+}
+
+file :{startFile();} prop+ {finishFile();};
+prop : ID '=' STRING '\n' {defineProperty($ID,$STRING);};
+ID   : [a-z]+ ;
+STRING : '"' .*? '"' ;
+
+
+```
+
+### 7.2 parse 트리 리스너로 응용 프로그램 구현하기
+
+- 응용프로그램과 그래머에 얽히지 않고 응용 프로그램을 빌드하기 위해 `parse tree를 생성하는 parser`를 가지고 있어야 하며, 응용 프로그램에 특화된 코드를 트리거하기 위해 `parse tree를 탐색하는 것이 중요! `
+  1. 선호하는 기술을 사용해 트리 탐색
+  2. ANTLR이 생성하는 트리 탐색 메커니즘 사용
+  - ParseTreeWalker 사용
