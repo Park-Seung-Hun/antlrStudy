@@ -1,6 +1,7 @@
 import org.antlr.v4.misc.OrderedHashMap;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -21,48 +22,79 @@ public class TestSQLListener {
 
 
             // 구현해야될 사항
-            // 1. 해당 SQL 문이 insert인지 select인지 판별
-            // 2-1. insert 문인 경우 table 과 values 값 추출
-            // 2-2. select 문인 경우 column 과 table 값 추출
+            // 1. 해당 SQL 문이 insert인지 select인지 판별 - 구현
+            // 2-1. insert 문인 경우 table 과 values 값 추출 - 구현
+            // 2-2. select 문인 경우 column 과 table 값 추출 - 구현
+            // 3. 각각 SQL문을 구현해
 
             for(int i=0;i<ctx.getChildCount();i+=2){ // SCOL(;) 때문에 인덱스+2, SQL 문이 들어간 파일
                 String checkCOM = ctx.getChild(i).getChild(0).getText();  // 어떤 SQL인지 check
+                String SQL = "";
 
                 if(checkCOM.equals("select") || checkCOM.equals("SELECT") ){
-                   System.out.println("Select 문입니다.");
+                    SQL+= checkCOM+' ';
 
-                   SQLParser.Select_stmtContext SELECT = ctx.select_stmt(SELECT_INDEX);
-                   for(idx=0;idx<SELECT.table().size();idx++){
-                       System.out.println("테이블 입니다 : " + SELECT.table(idx).table_name().getText());
-                   }
-                   for(idx=0;idx<SELECT.result_column().size();idx++){
-                        System.out.println("컬럼 입니다 : " + SELECT.result_column(idx).getText());
-                   }
+                    SQLParser.Select_stmtContext SELECT = ctx.select_stmt(SELECT_INDEX);
+                    for(idx=0;idx<SELECT.result_column().size();idx++){
 
-                   SELECT_INDEX++;
+                        SQL+= SELECT.result_column(idx).getText();
+                        if(SELECT.result_column().size()>1 && idx!=SELECT.result_column().size()-1){
+                            SQL += ',';
+                        }
+                    }
+
+                    for(idx=0;idx<SELECT.table().size();idx++){
+                        if(idx==0) SQL += " FROM ";
+                        SQL += SELECT.table(idx).table_name().getText();
+                    }
+                    SQL += ';';
+
+                    SELECT_INDEX++;
                 }
                 else if (checkCOM.equals("insert into") || checkCOM.equals("INSERT INTO")){
-                    System.out.println("Insert 문입니다.");
+                    try{
+                        SQL+= checkCOM+' ';
 
-                    SQLParser.Insert_stmtContext INSERT = ctx.insert_stmt(INSERT_INDEX);
+                        SQLParser.Insert_stmtContext INSERT = ctx.insert_stmt(INSERT_INDEX);
 
-                    System.out.println("테이블 입니다 : " + INSERT.table_name().getText() );
-                    for(idx=0;idx<INSERT.column_name().size();idx++){
-                        System.out.println("컬럼 입니다 : " + INSERT.column_name(idx).getText());
+                        SQL+= INSERT.table_name().getText();
+                        for(idx=0;idx<INSERT.column_name().size();idx++){
+                            if(idx==0) SQL+='(';
+
+                            SQL+=INSERT.column_name(idx).getText();
+
+                            if(INSERT.column_name().size()>1 && idx!=INSERT.column_name().size()-1){
+                                SQL += ',';
+                            }
+                            if(idx==INSERT.column_name().size()-1) SQL+=") ";
+                        }
+
+                        SQL += INSERT.K_VALUES().getText()+' ';
+                        for(idx=0;idx< INSERT.expr().size();idx++){
+                            if(idx==0) SQL+='(';
+
+                            SQL+=INSERT.expr(idx).getText();
+                            if(INSERT.expr().size()>1 && idx!=INSERT.expr().size()-1){
+                                SQL += ',';
+                            }
+                            if(idx==INSERT.expr().size()-1) SQL+=") ";
+                        }
+
+                        INSERT_INDEX++;
                     }
-                    for(idx=0;idx< INSERT.expr().size();idx++){
-                        System.out.println("값 입니다 : " + INSERT.expr(idx).getText());
-                    }
+                    catch(Exception e){System.out.println("에러발생");}
 
+                }
 
-                    INSERT_INDEX++;
-                }
-                else {
-                    // 에러가 발생할 경우 처리과정!!
-                    System.out.println("꽝");
-                }
+                System.out.println(SQL);
             }
 
+        }
+
+        // 에러 노드 방문시
+        public void  visitErrorNode(ErrorNode node){
+            System.out.println("에러발생");
+            System.out.println(node.getText());
         }
     }
 

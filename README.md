@@ -397,10 +397,20 @@ STRING : '"' .*? '"' ;
 
 ### 7.2 parse 트리 리스너로 응용 프로그램 구현하기
 
-- 응용프로그램과 그래머에 얽히지 않고 응용 프로그램을 빌드하기 위해 `parse tree를 생성하는 parser`를 가지고 있어야 하며, 응용 프로그램에 특화된 코드를 트리거하기 위해 `parse tree를 탐색하는 것이 중요! `
+- 응용프로그램과 그래머에 얽히지 않고 응용 프로그램을 빌드하기 위해 `parse tree를 생성하는 parser`를 가지고 있어야 하며, 응용 프로그램에 `특화된 코드를 트리거하기 위해 parse tree를 탐색하는 것이 중요! `
+
   1. 선호하는 기술을 사용해 트리 탐색
   2. ANTLR이 생성하는 트리 탐색 메커니즘 사용
-  - ParseTreeWalker 사용
+
+- `ParseTreeWalker 사용`
+
+  1. Grammar로부터 ANTLR가 Parser 생성 후 parse Tree를 자동으로 빌드.
+  2. parse tree를 얻은 다음 `enter/exit 메소드를 트리거` 하여 `모든 노드를 탐색하기 위해 ParseTreeWalker를 사용`할 수 있다. => 과제에선 parseExit()을 트리거하여 진행.
+
+- ANTLR가 SQL grammar로부터 생성한 SQLLIstener 인터페이스에 대해..
+
+  1. ANTLR의 ParseTreeWalker가 노드를 발견하고 종료하여 각 룰 서브트리에 대하여 enter/exit 메소드를 트리거한다.
+
 - 리스너 기법은 모든 트리 탐색 및 메소드 트리거가 자동으로 수행되기 때문에 우수하다.
   - 탐색 자체를 제어하지 못하는 것이 단점
   - 리스너 이벤트 메소드는 데이터를 전달하는 메소드 리턴 값을 사용할 수 없다.
