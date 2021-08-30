@@ -1,4 +1,4 @@
-// Generated from C:/Users/¹Ú½ÂÈÆ_tmax/Documents/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
+// Generated from C:/Users/wort2/OneDrive/¹®¼­/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;

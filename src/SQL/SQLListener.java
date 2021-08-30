@@ -1,4 +1,4 @@
-// Generated from C:/Users/¹Ú½ÂÈÆ_tmax/Documents/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
+// Generated from C:/Users/wort2/OneDrive/¹®¼­/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -97,16 +97,6 @@ public interface SQLListener extends ParseTreeListener {
 	 */
 	void exitKeyword(SQLParser.KeywordContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link SQLParser#column_alias}.
-	 * @param ctx the parse tree
-	 */
-	void enterColumn_alias(SQLParser.Column_aliasContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#column_alias}.
-	 * @param ctx the parse tree
-	 */
-	void exitColumn_alias(SQLParser.Column_aliasContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link SQLParser#table_name}.
 	 * @param ctx the parse tree
 	 */
@@ -126,16 +116,6 @@ public interface SQLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitColumn_name(SQLParser.Column_nameContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link SQLParser#table_alias}.
-	 * @param ctx the parse tree
-	 */
-	void enterTable_alias(SQLParser.Table_aliasContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link SQLParser#table_alias}.
-	 * @param ctx the parse tree
-	 */
-	void exitTable_alias(SQLParser.Table_aliasContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link SQLParser#any_name}.
 	 * @param ctx the parse tree

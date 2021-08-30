@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/plugins/antlr-intellij-plugin-v4/lib/antlr-4.9-complete.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/antlr-4.9-complete.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

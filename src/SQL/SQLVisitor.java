@@ -1,4 +1,4 @@
-// Generated from C:/Users/¹Ú½ÂÈÆ_tmax/Documents/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
+// Generated from C:/Users/wort2/OneDrive/¹®¼­/GitHub/antlrStudy/grammar\SQL.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -64,12 +64,6 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitKeyword(SQLParser.KeywordContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link SQLParser#column_alias}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitColumn_alias(SQLParser.Column_aliasContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link SQLParser#table_name}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -81,12 +75,6 @@ public interface SQLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitColumn_name(SQLParser.Column_nameContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link SQLParser#table_alias}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTable_alias(SQLParser.Table_aliasContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link SQLParser#any_name}.
 	 * @param ctx the parse tree

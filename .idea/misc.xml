@@ -58,7 +58,7 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/grammar/SQL.g4" />
           <option name="autoGen" value="true" />
-          <option name="outputDir" value="C:\Users\박승훈_tmax\Documents\GitHub\antlrStudy\src\SQL" />
+          <option name="outputDir" value="C:\Users\wort2\OneDrive\문서\GitHub\antlrStudy\src\SQL" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
           <option name="pkg" value="" />
